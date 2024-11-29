@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { EditContactForm } from './EditContactForm';
 
 const contact = {
   email: 'edit@jstack.com.br',
@@ -15,7 +16,7 @@ type CreateContactPageProps = {
   };
 };
 
-export default async function CreateContactPage({
+export default async function EditContactPage({
   params,
 }: CreateContactPageProps) {
   const { contactId } = params;
@@ -41,7 +42,7 @@ export default async function CreateContactPage({
         </h1>
       </header>
 
-      <ContactForm contact={contact} />
+      <EditContactForm contact={contact} />
     </>
   );
 }
