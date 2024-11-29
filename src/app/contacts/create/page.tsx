@@ -1,8 +1,24 @@
+'use client';
+
 import { ContactForm } from '@/components/ContactForm';
 import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CreateContactPage() {
+  const handleSubmit = async (data: { name: string; email: string }) => {
+    const response = await fetch('/api/contacts?id=123', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const body = await response.json();
+
+    console.log({ body });
+  };
+
   return (
     <>
       <header>
@@ -18,7 +34,7 @@ export default function CreateContactPage() {
         </h1>
       </header>
 
-      <ContactForm />
+      <ContactForm onSubmit={handleSubmit} />
     </>
   );
 }
