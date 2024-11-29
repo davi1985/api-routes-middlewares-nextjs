@@ -1,3 +1,5 @@
+'use client';
+
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import {
   AlertDialog,
@@ -12,28 +14,27 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { type Contact } from '@prisma/client';
 import { Edit2Icon, PlusCircleIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
-
-const contacts = [
-  {
-    id: String(Math.random()),
-    name: 'Contact',
-    email: 'contact@jstack.com.br',
-  },
-  {
-    id: String(Math.random()),
-    name: 'Contact',
-    email: 'contact@jstack.com.br',
-  },
-  {
-    id: String(Math.random()),
-    name: 'Contact',
-    email: 'contact@jstack.com.br',
-  },
-];
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [contacts, setContacts] = useState<Contact[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch('/api/contacts', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const body = await response.json();
+
+      setContacts(body.contacts);
+    })();
+  }, []);
+
   return (
     <>
       <header className="flex items-center justify-between">
