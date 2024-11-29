@@ -1,0 +1,3 @@
+# Notes
+
+## Next.js Concepts
