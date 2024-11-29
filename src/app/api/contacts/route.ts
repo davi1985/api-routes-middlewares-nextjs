@@ -1,12 +1,6 @@
 import { db } from '@/lib/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
-export const GET = async () => {
-  const contacts = await db.contact.findMany();
-
-  return NextResponse.json({ contacts });
-};
-
 export const POST = async (request: NextRequest) => {
   const { name, email } = await request.json();
 

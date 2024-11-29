@@ -1,5 +1,3 @@
-'use client';
-
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import {
   AlertDialog,
@@ -14,26 +12,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { type Contact } from '@prisma/client';
+import { db } from '@/lib/db';
+import { getContactsUseCase } from '@/services/getContactsUseCase';
 import { Edit2Icon, PlusCircleIcon, Trash2Icon } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
-export default function Home() {
-  const [contacts, setContacts] = useState<Contact[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('/api/contacts', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const body = await response.json();
-
-      setContacts(body.contacts);
-    })();
-  }, []);
+export default async function Home() {
+  const contacts = await getContactsUseCase();
 
   return (
     <>
