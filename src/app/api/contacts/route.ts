@@ -1,20 +1,29 @@
+import { db } from '@/lib/db';
 import { type NextRequest, NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 
 export const POST = async (request: NextRequest) => {
-  const body = await request.json();
+  const { name, email } = await request.json();
 
-  const searchParams = request.nextUrl.searchParams.get('id');
-  // const headers = new Headers(request.headers);
-  console.log({ body, headers: headers().get('Content-Type'), searchParams });
+  if (!name || !email) {
+    return NextResponse.json(
+      { error: 'Name and email are required!' },
+      { status: 400 },
+    );
+  }
 
-  const response = NextResponse.json({ create: true }, { status: 201 });
-
-  response.cookies.set('cookies-example', 'this is cookie example', {
-    httpOnly: true,
+  const emailAlreadyInUse = await db.contact.findUnique({
+    where: { email },
+    select: { id: true, email: true },
   });
 
-  console.log({ cookie: request.cookies.get('cookies-example') });
+  if (emailAlreadyInUse) {
+    return NextResponse.json(
+      { error: 'This email already in use.' },
+      { status: 409 },
+    );
+  }
 
-  return response;
+  const contact = await db.contact.create({ data: { name, email } });
+
+  return NextResponse.json({ contact }, { status: 201 });
 };
